@@ -1,0 +1,112 @@
+@import "tailwindcss";
+/* v4 全新極簡導入語法 */
+
+:root {
+  /* ── 基礎文字與背景（高對比、大字體優化） ── */
+  --bg: #ffffff;
+  --bg-app: #f7f9fa;
+  --text: #1a1a1a;
+  /* 💡 淺色模式內文改為近純黑，確保最高對比度 */
+  --text-h: #000000;
+  /* 💡 標題直接採用純黑 */
+  --border: #cccccc;
+  /* 💡 邊框稍微加深，讓輸入框界線更清晰 */
+  --code-bg: #ffffff;
+
+  /* ── 核心專業色 ── */
+  --accent: #1e3a8a;
+  --accent-bg: #eff6ff;
+  --accent-border: #bfdbfe;
+  --highlight: #b45309;
+  --highlight-bg: #fffbeb;
+
+  --shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+
+  /* ── 字型與排版 ── */
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+
+  /* 💡 核心改動：基準字級從 15px 放大至 16px，字重維持 450 微加粗，行高拉開到 1.65 */
+  font: 450 16px/1.65 var(--sans);
+  letter-spacing: 0.02em;
+  /* 💡 稍微拉開字距，中文字體會極好閱讀 */
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg-app);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── 深色模式 ── */
+.dark :root {
+  --bg: #141414;
+  --bg-app: #080808;
+  --text: #e5e5e5;
+  /* 💡 深色模式內文再度亮化，完全告別灰矇矇的感覺 */
+  --text-h: #ffffff;
+  /* 💡 深色模式標題純白 */
+  --border: #3a3a3a;
+  /* 💡 深色邊框加深 */
+  --code-bg: #141414;
+
+  --accent: #60a5fa;
+  --accent-bg: rgba(96, 165, 250, 0.05);
+  --accent-border: rgba(96, 165, 250, 0.15);
+  --highlight: #fbbf24;
+  --highlight-bg: rgba(251, 191, 36, 0.05);
+}
+
+/* ── 💡 針對計算機組件的「大字體特調規則」 ── */
+
+/* 1. 讓所有輸入框 (Input) 和下拉選單 (Select) 的字體變大、更好點擊 */
+.styled-input {
+  font-size: 16px !important;
+  /* 強制放大到 16px（也能防止 iOS Safari 自動放大畫面） */
+  font-weight: 500 !important;
+  /* 讓輸入的數字與文字更扎實 */
+  padding: 10px 14px !important;
+  /* 稍微加大輸入框的內襯托間距 */
+}
+
+/* 2. 讓每個輸入欄位的標題 (Label) 更粗、更醒目 */
+label {
+  font-size: 14px !important;
+  /* 標題從原本的 xs(12px) 放大到 14px */
+  font-weight: 600 !important;
+  /* 加粗 */
+  color: var(--text-h) !important;
+  margin-bottom: 6px !important;
+  /* 留白加大 */
+}
+
+/* 3. 調整隱性成本區塊的極小字體 (原本的 text-[11px]) */
+.grid label {
+  font-size: 13px !important;
+  /* 強制將原本擠在一起的小標題放大到 13px */
+}
+
+/* 4. 讓右側資金明細 (Financial Breakdown) 的文字大口呼吸 */
+.text-xs {
+  font-size: 14px !important;
+  /* 原本明細是 12px 偏小，全面升級為 14px */
+}
+
+.text-xs span.font-mono {
+  font-size: 15px !important;
+  /* 明細右側的「元」和數字放大到 15px */
+}
+
+/* 5. 實際每月淨流出總金額 (最底部的關鍵數字) */
+.text-lg {
+  font-size: 1.35rem !important;
+  /* 讓最終總金額比原本更澎湃、更醒目 */
+}
+
+/* 6. 強制放寬所有原本刻意調淡的說明文字 */
+.opacity-80,
+.opacity-60 {
+  opacity: 0.95 !important;
+  /* 拒絕過度淡化，確保所有人眼都能輕鬆辨識 */
+}
