@@ -92,13 +92,13 @@ defineExpose({
 
       <div class="flex items-center space-x-2 w-full sm:w-auto">
         <button @click="openImportModal"
-          class="import-btn flex-1 sm:flex-none text-[11px] sm:text-xs font-mono font-bold px-3 py-1.5 rounded border transition-all duration-200 tracking-wider whitespace-nowrap"
+          class="import-btn flex-1 sm:flex-none text-[11px] sm:text-xs font-mono font-bold px-3 py-1.5 rounded border transition-all duration-200 tracking-wider whitespace-nowrap cursor-pointer"
           style="background-color: var(--accent-bg); color: var(--accent); border-color: var(--accent-border);"
           onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
           IMPORT NOTE
         </button>
         <button @click="resetForm"
-          class="reset-btn flex-1 sm:flex-none text-[11px] sm:text-xs font-mono px-3 py-1.5 rounded border transition-all duration-200 tracking-wider whitespace-nowrap">
+          class="reset-btn flex-1 sm:flex-none text-[11px] sm:text-xs font-mono px-3 py-1.5 rounded border transition-all duration-200 tracking-wider whitespace-nowrap cursor-pointer">
           RESET FORM
         </button>
       </div>
@@ -126,12 +126,8 @@ defineExpose({
                 <option value="none">一般身分 (無特定加碼條件)</option>
                 <option value="single">成年單身青年 (18-39歲加碼 1.2 倍)</option>
                 <option value="newlywed">新婚家庭 (2年內加碼 1.3 倍)</option>
-
-                <!-- 補上弱勢族群選項 -->
                 <option value="social_disadvantage">社會弱勢 (身障/原住民/65歲以上長者等加碼 1.2 倍)</option>
                 <option value="economic_disadvantage">經濟弱勢 (低收入戶 / 中低收入戶加碼 1.4 倍)</option>
-
-                <!-- 視需求可自由決定是否加上育兒族群 (育兒也是大宗，加碼 1.4~1.8倍以上) -->
                 <option value="raised_child">育兒家庭 (育有未成年子女，依人數加碼 1.4 倍起)</option>
               </select>
             </div>
@@ -151,11 +147,12 @@ defineExpose({
                 placeholder="例如：站前精緻套房" />
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] sm:text-xs font-medium mb-1 flex justify-between items-center gap-2">
-                <span class="whitespace-nowrap">完整地址或縣市路段</span>
+              <label
+                class="block text-[11px] sm:text-xs font-medium mb-1 flex flex-wrap sm:flex-row sm:items-center sm:justify-between gap-1.5">
+                <span class="text-[var(--text-h)]">完整地址或縣市路段</span>
                 <span
-                  class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono bg-[var(--accent-bg)] text-[var(--accent)] border border-[var(--accent-border)] whitespace-nowrap shrink-0">
-                  補貼分級：{{ calculationResult?.detectedCity }}
+                  class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono bg-[var(--accent-bg)] text-[var(--accent)] border border-[var(--accent-border)] sm:ml-auto shrink">
+                  補貼分級：{{ calculationResult?.detectedCity || '未辨識' }}
                 </span>
               </label>
               <input type="text" v-model="houseForm.address" class="styled-input w-full text-sm"
@@ -173,8 +170,9 @@ defineExpose({
 
             <div class="col-span-1 sm:col-span-2">
               <label class="block text-[11px] sm:text-xs font-medium mb-1 whitespace-nowrap">房東政策 / 租金補貼可行性</label>
+              <!-- 💡 核心優化：將原本寫死的 border-amber 顏色改為綁定系統的 --highlight 變數 -->
               <select v-model="houseForm.allow_subsidy" class="styled-input w-full text-xs sm:text-sm truncate"
-                :class="!houseForm.allow_subsidy ? 'border-amber-500/80 text-amber-600 dark:text-[var(--highlight)]' : ''">
+                :style="!houseForm.allow_subsidy ? 'border-color: var(--highlight); color: var(--highlight);' : ''">
                 <option :value="true">允許申報租金補貼（系統正常發放補貼）</option>
                 <option :value="false">拒絕申報租金補貼（強制取消並扣分）</option>
               </select>
@@ -208,7 +206,7 @@ defineExpose({
               <label class="block text-[11px] sm:text-xs font-medium mb-1 whitespace-nowrap">其中符合並申請租補人數</label>
               <select v-model="subsidySelectValue" class="styled-input w-full text-xs sm:text-sm truncate"
                 :disabled="!houseForm.allow_subsidy"
-                :class="!houseForm.allow_subsidy ? 'opacity-40 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800' : ''">
+                :style="!houseForm.allow_subsidy ? 'opacity: 0.4; cursor: not-allowed; background: var(--bg-app);' : ''">
                 <option value="0">0 人（皆不申請）</option>
                 <option value="1" v-if="extraOpts.sharePeople >= 1">1 人申請補貼</option>
                 <option value="2" v-if="extraOpts.sharePeople >= 2">2 人同時申請（雙租補）</option>
@@ -284,18 +282,19 @@ defineExpose({
 
           <div class="my-1 sm:my-2 font-mono text-4xl sm:text-5xl font-bold tracking-tight"
             :class="calculationResult?.levelColor">
-            {{ calculationResult?.score }}<span class="text-xs font-sans opacity-60 text-slate-500"> / 100</span>
+            {{ calculationResult?.score }}<span class="text-xs font-sans opacity-60" style="color: var(--text);"> /
+              100</span>
           </div>
 
           <div
             class="inline-block px-3 py-1 rounded text-[11px] sm:text-xs font-semibold tracking-wide whitespace-nowrap"
-            style="background: var(--code-bg); color: var(--text-h);">
+            style="background: var(--code-bg); color: var(--text-h); border: 1px solid var(--border);">
             評級結果：<span :class="calculationResult?.levelColor">{{ calculationResult?.level }}</span>
           </div>
 
           <div class="mt-4 pt-1">
             <button @click="handleShare"
-              class="w-full text-xs font-bold py-2 px-4 rounded transition-all duration-200 shadow-sm border font-mono tracking-wide"
+              class="w-full text-xs font-bold py-2 px-4 rounded transition-all duration-200 shadow-sm border font-mono tracking-wide cursor-pointer"
               style="background-color: var(--accent); color: #fff; border-color: var(--accent);"
               onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
               {{ shareButtonText }}
@@ -303,48 +302,54 @@ defineExpose({
           </div>
         </div>
 
+        <!-- 升級建議車道 -->
         <div v-if="upSellingAdvice.shouldRecommend"
-          class="p-4 rounded-lg border text-xs space-y-3 transition-all duration-300 border-amber-500/30"
-          style="background-color: rgba(217, 119, 6, 0.05);">
-          <div class="flex items-center justify-between border-b pb-1.5 border-amber-500/20 gap-2">
-            <span
-              class="font-mono font-bold tracking-wider text-amber-600 dark:text-amber-400 uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+          class="p-4 rounded-lg border text-xs space-y-3 transition-all duration-300"
+          style="background-color: rgba(217, 119, 6, 0.04); border-color: rgba(217, 119, 6, 0.25);">
+          <div class="flex items-center justify-between border-b pb-1.5 gap-2"
+            style="border-color: rgba(217, 119, 6, 0.15);">
+            <span class="font-mono font-bold tracking-wider uppercase whitespace-nowrap overflow-hidden text-ellipsis"
+              style="color: var(--highlight);">
               UPGRADE STRATEGY / 高端車道建議
             </span>
-            <span
-              class="px-1.5 py-0.5 rounded text-[9px] bg-amber-500 text-white font-bold whitespace-nowrap shrink-0">精準空間</span>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold whitespace-nowrap shrink-0"
+              style="background-color: var(--highlight); color: #fff;">精準空間</span>
           </div>
 
-          <p class="leading-relaxed opacity-90 text-[11px] sm:text-xs">
+          <p class="leading-relaxed opacity-95 text-[11px] sm:text-xs">
             當前物件對您的財務基線而言非常輕鬆。以您的收入結構而言，在此合租編制下，您個人每月仍有
-            <span class="font-mono font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap">{{
+            <span class="font-mono font-bold whitespace-nowrap" style="color: var(--highlight);">{{
               upSellingAdvice.availableMarginPerPerson }} 元</span>
             的安全升級彈性。
           </p>
 
-          <div class="p-2.5 rounded bg-amber-500/5 border border-amber-500/10 space-y-1 text-[11px] sm:text-xs">
+          <div class="p-2.5 rounded border space-y-1 text-[11px] sm:text-xs"
+            style="background: var(--bg); border-color: rgba(217, 119, 6, 0.15);">
             <div class="flex justify-between">
               <span class="opacity-80">您個人的理想房租分攤範圍：</span>
-              <span class="font-mono font-bold text-amber-700 dark:text-amber-300">
+              <span class="font-mono font-bold" style="color: var(--highlight);">
                 {{ upSellingAdvice.personalMinRent }} ~ {{ upSellingAdvice.personalMaxRent }} 元 / 人
               </span>
             </div>
-            <div class="flex justify-between border-t border-dashed border-amber-500/20 pt-1 mt-1">
+            <div class="flex justify-between border-t border-dashed pt-1 mt-1"
+              style="border-color: rgba(217, 119, 6, 0.15);">
               <span class="opacity-80">同編制下建議主推房源總租金：</span>
-              <span class="font-mono font-bold text-amber-700 dark:text-amber-300">
+              <span class="font-mono font-bold" style="color: var(--highlight);">
                 {{ upSellingAdvice.suggestedMinRent }} ~ {{ upSellingAdvice.suggestedMaxRent }} 元 / 總價
               </span>
             </div>
           </div>
         </div>
 
+        <!-- 支出明細面板 -->
         <div class="p-3 sm:p-4 rounded-lg border space-y-3 shadow-sm" style="background-color: var(--code-bg);">
           <h4
             class="text-[11px] sm:text-xs font-bold tracking-wider uppercase border-b pb-2 font-mono flex justify-between items-center gap-2"
             style="color: var(--text-h); border-color: var(--border);">
             <span class="whitespace-nowrap">Financial Breakdown / 個人資金支出明細</span>
             <span v-if="(extraOpts.sharePeople || 1) > 1"
-              class="text-[9px] sm:text-[10px] text-amber-600 font-sans font-bold whitespace-nowrap shrink-0">
+              class="text-[9px] sm:text-[10px] font-sans font-bold whitespace-nowrap shrink-0"
+              style="color: var(--highlight);">
               (已按 {{ extraOpts.sharePeople }} 人分攤拆解)
             </span>
           </h4>
@@ -352,18 +357,20 @@ defineExpose({
           <div class="text-[11px] sm:text-xs space-y-2.5">
             <div class="flex justify-between items-center gap-2">
               <span class="opacity-80 truncate">個人固定房租 ＋ 管理費分攤</span>
-              <span class="font-mono font-medium whitespace-nowrap">
+              <span class="font-mono font-medium whitespace-nowrap" style="color: var(--text-h);">
                 {{ calculationResult?.personalRentAndFee || 0 }} 元
               </span>
             </div>
             <div class="flex justify-between items-center gap-2">
               <span class="opacity-80 truncate">個人預估水電分攤費用</span>
-              <span class="font-mono font-medium whitespace-nowrap">+ {{ calculationResult?.personalUtility || 0 }}
-                元</span>
+              <span class="font-mono font-medium whitespace-nowrap" style="color: var(--text-h);">+ {{
+                calculationResult?.personalUtility || 0 }} 元</span>
             </div>
 
-            <div class="flex justify-between items-center gap-2 font-medium"
-              :class="calculationResult?.isAllowSubsidy && extraOpts.subsidyPeople > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 line-through opacity-60'">
+            <!-- 租補動態變色：改為抓取全域主題變數，關閉時使用 var(--text) 降低不透明度 -->
+            <div class="flex justify-between items-center gap-2 font-medium" :style="calculationResult?.isAllowSubsidy && extraOpts.subsidyPeople > 0
+              ? 'color: #10b981;'
+              : 'color: var(--text); opacity: 0.4; text-decoration: line-through;'">
               <span class="truncate">
                 <span v-if="!calculationResult?.isAllowSubsidy">房東拒絕申報租金補貼</span>
                 <span v-else-if="extraOpts.subsidyPeople === 0">無人申請租金補貼</span>
@@ -378,12 +385,14 @@ defineExpose({
                 {{ (extraOpts.sharePeople || 1) > 1 ? '個人實際每月淨流出' : '每月實際總淨流出' }}
               </span>
               <span class="text-base sm:text-lg font-bold font-mono whitespace-nowrap" style="color: var(--highlight);">
-                $ {{ calculationResult?.finalRealCost }} <span class="text-xs font-normal opacity-70">元 / 月</span>
+                $ {{ calculationResult?.finalRealCost }} <span class="text-xs font-normal opacity-70"
+                  style="color: var(--text);">元 / 月</span>
               </span>
             </div>
           </div>
         </div>
 
+        <!-- 財務水位警示 -->
         <div
           class="p-3 sm:p-4 rounded-lg border text-[11px] sm:text-xs space-y-3 shadow-sm transition-colors duration-300">
           <div class="flex items-center justify-between gap-2">
@@ -391,7 +400,7 @@ defineExpose({
               {{ (extraOpts.sharePeople || 1) > 1 ? '個人分攤租金佔總收入比重：' : '房租固定支出佔總收入比重：' }}
             </span>
             <span class="font-mono text-xs sm:text-sm font-bold whitespace-nowrap shrink-0"
-              :class="Number(calculationResult?.financialRatio) > 33.3 ? 'text-amber-600 dark:text-[var(--highlight)]' : 'text-emerald-600 dark:text-emerald-400'">
+              :style="Number(calculationResult?.financialRatio) > 33.3 ? 'color: var(--highlight);' : 'color: #10b981;'">
               {{ calculationResult?.financialRatio }} %
             </span>
           </div>
@@ -402,9 +411,8 @@ defineExpose({
             [警告] 固定支出已超過您月收入的 1/3（黃金警戒線），將會顯著擠壓日常儲蓄，請審慎評估。
           </p>
 
-          <p v-else
-            class="text-[11px] p-2.5 sm:p-3 rounded-lg border transition-colors duration-300 leading-relaxed text-emerald-700 dark:text-emerald-400"
-            style="background-color: var(--accent-bg); border-color: var(--accent-border);">
+          <p v-else class="text-[11px] p-2.5 sm:p-3 rounded-lg border transition-colors duration-300 leading-relaxed"
+            style="background-color: var(--accent-bg); border-color: var(--accent-border); color: #10b981;">
             [財務安全] 個人房租分攤結構處於安全水位，符合理性資產配置比例。
           </p>
         </div>
@@ -413,6 +421,7 @@ defineExpose({
 
     </div>
 
+    <!-- 🌟 IMPORT MODAL 彈窗區塊 -->
     <div v-if="isModalOpen"
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
       @click.self="closeImportModal">
@@ -422,7 +431,8 @@ defineExpose({
         <div class="flex items-center justify-between pb-2 border-b border-dashed" style="border-color: var(--border);">
           <h3 class="text-xs font-bold font-mono tracking-wider" style="color: var(--text-h);">SELECT NOTE / 選擇欲精算的筆記
           </h3>
-          <button @click="closeImportModal" class="text-xs opacity-50 hover:opacity-100 font-mono">CLOSE</button>
+          <button @click="closeImportModal"
+            class="text-xs opacity-50 hover:opacity-100 font-mono cursor-pointer">CLOSE</button>
         </div>
 
         <div class="mt-2">
@@ -435,25 +445,32 @@ defineExpose({
             NO AVAILABLE RECORDS FOUND / 無符合條件的待追蹤房源
           </div>
 
+          <!-- 彈窗內的卡片列表項目 -->
           <div v-for="note in selectableNotes" :key="note.id" @click="handleSelectNote(note)"
             class="p-2.5 rounded border border-dashed cursor-pointer hover:border-solid transition-all duration-150 group text-left relative overflow-hidden"
             style="background-color: var(--code-bg); border-color: var(--border);"
             onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+
+            <!-- 左側指示狀態條：已約看改為核心品牌藍（--accent），其餘為中性框色（--border） -->
             <div class="absolute left-0 top-0 bottom-0 w-1"
-              :style="{ backgroundColor: note.status === 'scheduled' ? '#3b82f6' : '#94a3b8' }"></div>
+              :style="{ backgroundColor: note.status === 'scheduled' ? 'var(--accent)' : 'var(--border)' }"></div>
 
             <div class="flex justify-between items-start gap-2 pl-1.5">
-              <span class="text-xs font-bold line-clamp-1 group-hover:text-[var(--accent)]"
-                style="color: var(--text-h);">
+              <span class="text-xs font-bold line-clamp-1" style="color: var(--text-h);">
                 {{ note.title }}
+                <!-- 💡 彈窗已約看標籤優化：移除寫死的藍色，改用 var() 主題變數 -->
                 <span v-if="note.status === 'scheduled'"
-                  class="text-[9px] ml-1 px-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 font-normal">已約看</span>
+                  class="text-[9px] ml-1 px-1.5 py-0.5 rounded font-sans font-bold"
+                  style="background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border);">
+                  已約看
+                </span>
               </span>
-              <span class="text-xs font-mono font-bold shrink-0 text-emerald-600 dark:text-emerald-400">
+              <span class="text-xs font-mono font-bold shrink-0" style="color: #10b981;">
                 ${{ note.rent.toLocaleString() }}
               </span>
             </div>
-            <div class="flex justify-between items-center text-[10px] opacity-60 mt-1 font-mono pl-1.5">
+            <div class="flex justify-between items-center text-[10px] opacity-60 mt-1 font-mono pl-1.5"
+              style="color: var(--text);">
               <span class="truncate max-w-[200px]">{{ note.address || '無登記路段' }}</span>
               <span>站點 {{ note.closest_station_minutes || 5 }} 分</span>
             </div>

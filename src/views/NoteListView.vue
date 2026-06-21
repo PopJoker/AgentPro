@@ -218,15 +218,20 @@ const goToDetail = (id) => {
               {{ note.title }}
 
               <span v-if="note.status === 'reserved'"
-                class="text-[9px] font-mono font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-emerald-500 text-white border border-emerald-600">
+                class="text-[10px] font-sans font-bold tracking-wider uppercase px-1.5 py-0.5 rounded transition-colors"
+                style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
                 已預定
               </span>
+
               <span v-else-if="note.status === 'scheduled'"
-                class="text-[9px] font-mono font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-400 border border-blue-200 dark:border-blue-900/60">
+                class="text-[10px] font-sans font-bold tracking-wider uppercase px-1.5 py-0.5 rounded border transition-colors"
+                style="background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border);">
                 已約看
               </span>
+
               <span v-else
-                class="text-[9px] font-mono font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60">
+                class="text-[10px] font-sans font-bold tracking-wider uppercase px-1.5 py-0.5 rounded border transition-colors"
+                style="background: var(--bg-app); color: var(--text); border-color: var(--border);">
                 待追蹤
               </span>
             </h3>

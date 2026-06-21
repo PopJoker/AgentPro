@@ -277,39 +277,49 @@ watch(extraOpts, () => {
         </div>
 
         <!-- CRM 區塊 -->
-        <div class="detail-card p-4 rounded-lg border space-y-4">
+        <div class="detail-card p-4 rounded-lg border space-y-4"
+          style="background: var(--bg); border-color: var(--border);">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 mb-2"
             style="border-color: var(--border);">
             <h3 class="text-xs font-bold tracking-widest uppercase font-mono" style="color: var(--accent);">
               CRM CUSTOMER MANAGEMENT / 客戶排程與狀態管理
             </h3>
-            <div
-              class="flex items-center space-x-1 mt-2 sm:mt-0 bg-slate-100 dark:bg-slate-800 p-0.5 rounded text-[11px] font-mono">
+
+            <div class="flex items-center space-x-1 mt-2 sm:mt-0 p-0.5 rounded text-[11px] font-mono border"
+              style="background: var(--bg-app); border-color: var(--border);">
+
               <button @click="note.status = 'available'; handleFieldChange()"
-                :class="['px-2 py-0.5 rounded transition-all', note.status === 'available' ? 'bg-white dark:bg-slate-700 font-bold shadow-sm' : 'opacity-60']">
+                :class="['px-2 py-0.5 rounded transition-all cursor-pointer']" :style="note.status === 'available'
+                  ? 'background: var(--bg); color: var(--text-h); font-weight: bold; box-shadow: var(--shadow); border: 1px solid var(--border);'
+                  : 'color: var(--text); opacity: 0.6; border: 1px solid transparent;'">
                 待追蹤
               </button>
+
               <button @click="note.status = 'scheduled'; handleFieldChange()"
-                :class="['px-2 py-0.5 rounded transition-all text-blue-600 dark:text-blue-400', note.status === 'scheduled' ? 'bg-white dark:bg-slate-700 font-bold shadow-sm' : 'opacity-60']">
+                :class="['px-2 py-0.5 rounded transition-all cursor-pointer']" :style="note.status === 'scheduled'
+                  ? 'background: var(--accent-bg); color: var(--accent); font-weight: bold; box-shadow: var(--shadow); border: 1px solid var(--accent-border);'
+                  : 'color: var(--text); opacity: 0.6; border: 1px solid transparent;'">
                 已預約看房
               </button>
+
               <button @click="note.status = 'reserved'; handleFieldChange()"
-                :class="['px-2 py-0.5 rounded transition-all text-emerald-600 dark:text-emerald-400', note.status === 'reserved' ? 'bg-white dark:bg-slate-700 font-bold shadow-sm' : 'opacity-60']">
+                :class="['px-2 py-0.5 rounded transition-all cursor-pointer']" :style="note.status === 'reserved'
+                  ? 'background: rgba(16, 185, 129, 0.1); color: #10b981; font-weight: bold; box-shadow: var(--shadow); border: 1px solid rgba(16, 185, 129, 0.25);'
+                  : 'color: var(--text); opacity: 0.6; border: 1px solid transparent;'">
                 已預定成功
               </button>
             </div>
           </div>
 
-          <!-- 成交狀態面板 -->
-          <div v-if="note.status === 'reserved'"
-            class="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded border border-emerald-200 dark:border-emerald-900 space-y-3">
+          <div v-if="note.status === 'reserved'" class="p-3 rounded border space-y-3"
+            style="background: rgba(16, 185, 129, 0.04); border-color: rgba(16, 185, 129, 0.25);">
             <div class="flex items-center justify-between">
-              <div
-                class="text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+              <div class="text-[11px] font-mono font-bold uppercase tracking-wider" style="color: #10b981;">
                 FINAL RESERVED CUSTOMER / 最終鎖定租客
               </div>
               <button @click="cancelReservation"
-                class="text-[10px] font-mono text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60 px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 hover:bg-red-50">
+                class="text-[10px] font-mono text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60 px-1.5 py-0.5 rounded hover:bg-red-50 cursor-pointer"
+                style="background: var(--bg);">
                 CANCEL RESERVATION
               </button>
             </div>
@@ -332,59 +342,59 @@ watch(extraOpts, () => {
             </div>
           </div>
 
-          <!-- 預約名單動態篩選面板 -->
           <div class="space-y-3">
-            <div class="text-[11px] font-mono font-bold opacity-60 uppercase tracking-wider">
+            <div class="text-[11px] font-mono font-bold opacity-60 uppercase tracking-wider"
+              style="color: var(--text-h);">
               <span v-if="note.status === 'available'">POTENTIAL CUSTOMERS / 洽談中潛在客（未定時間）</span>
               <span v-else-if="note.status === 'scheduled'">CONFIRMED APPOINTMENTS / 已排定看房行程</span>
               <span v-else>ALL APPOINTMENTS HISTORY / 所有看房紀錄歷史</span>
             </div>
 
-            <!-- 🌟 改為使用過濾後的 filteredAppointments 變數 -->
             <div v-if="filteredAppointments.length" class="space-y-2">
               <div v-for="app in filteredAppointments" :key="app.id"
-                class="p-2.5 rounded border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs bg-slate-50 dark:bg-slate-900">
+                class="p-2.5 rounded border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                style="background: var(--bg-app); border-color: var(--border);">
 
                 <div class="space-y-1 grow">
                   <div class="flex items-center space-x-2">
-                    <span class="font-bold text-slate-800 dark:text-slate-200">{{ app.name }}</span>
-                    <span class="font-mono text-slate-400">{{ app.phone }}</span>
+                    <span class="font-bold" style="color: var(--text-h);">{{ app.name }}</span>
+                    <span class="font-mono" style="color: var(--text); opacity: 0.6;">{{ app.phone }}</span>
                   </div>
-                  <div v-if="app.notes" class="text-slate-400 text-[11px] italic">
+                  <div v-if="app.notes" class="text-[11px] italic" style="color: var(--text); opacity: 0.7;">
                     備註: {{ app.notes }}
                   </div>
 
                   <div class="flex items-center space-x-2 pt-1">
-                    <span class="text-[10px] font-mono text-slate-400 shrink-0">約看時間:</span>
+                    <span class="text-[10px] font-mono shrink-0" style="color: var(--text); opacity: 0.6;">約看時間:</span>
                     <input type="text" v-model="app.appointment_time" @input="handleFieldChange"
                       placeholder="未定 (填寫後自動轉為預約行程)"
-                      class="styled-input py-0.5 px-1.5 text-[11px] font-mono w-full max-w-[220px] bg-white dark:bg-slate-800 border-slate-200" />
+                      class="styled-input py-0.5 px-1.5 text-[11px] font-mono w-full max-w-[220px]"
+                      style="background: var(--bg); border-color: var(--border);" />
                   </div>
                 </div>
 
                 <div class="flex items-center space-x-2 shrink-0 self-end sm:self-center">
                   <button v-if="note.status !== 'reserved'" @click="convertToReserved(app)"
-                    class="px-2 py-1 bg-emerald-600 text-white rounded text-[10px] font-mono font-bold hover:bg-emerald-700">
+                    class="px-2 py-1 bg-emerald-600 text-white rounded text-[10px] font-mono font-bold hover:bg-emerald-700 cursor-pointer">
                     SET RESERVED
                   </button>
                   <button @click="removeAppointmentById(app.id)"
-                    class="px-1.5 py-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded text-[10px]">
+                    class="px-1.5 py-1 text-red-500 hover:opacity-80 rounded text-[10px] cursor-pointer">
                     REMOVE
                   </button>
                 </div>
 
               </div>
             </div>
-            <div v-else
-              class="text-xs text-slate-400 italic font-mono p-4 border border-dashed rounded text-center bg-slate-200/20">
+            <div v-else class="text-xs italic font-mono p-4 border border-dashed rounded text-center"
+              style="background: var(--bg-app); border-color: var(--border); color: var(--text); opacity: 0.7;">
               <span v-if="note.status === 'available'">當前無「待追蹤」的潛在客戶。</span>
               <span v-else-if="note.status === 'scheduled'">當前無「已約定時間」的看房排程。</span>
               <span v-else>暫無紀錄</span>
             </div>
 
-            <!-- 快捷表單 -->
             <div class="pt-2 border-t border-dashed" style="border-color: var(--border);">
-              <div class="text-[10px] font-mono font-bold opacity-50 mb-2">
+              <div class="text-[10px] font-mono font-bold opacity-50 mb-2" style="color: var(--text);">
                 {{ note.status === 'available' ? '快速登記潛在追蹤客 (免填時間)' : '快速新增預約看房行程' }}
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
@@ -405,7 +415,8 @@ watch(extraOpts, () => {
                 </div>
                 <div>
                   <button @click="addAppointment"
-                    class="w-full py-1.5 bg-blue-600 text-white rounded font-mono text-xs font-bold hover:bg-blue-700">
+                    class="w-full py-1.5 text-white rounded font-mono text-xs font-bold hover:opacity-90 cursor-pointer"
+                    style="background: var(--accent);">
                     + SAVE CUSTOMER
                   </button>
                 </div>
